@@ -162,95 +162,6 @@
       box-shadow: 0 0 10px rgba(122,21,21,0.5);
     }
 
-    /* Modal Styles */
-    .modal-overlay {
-      position: fixed;
-      top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0,0,0,0.85);
-      z-index: 100;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.3s ease;
-      backdrop-filter: blur(5px);
-    }
-
-    .modal-overlay.active {
-      opacity: 1;
-      pointer-events: all;
-    }
-
-    .modal-content {
-      background: var(--bg2);
-      border: 2px solid var(--gold);
-      border-radius: 12px;
-      padding: 2.5rem 2rem;
-      width: 90%;
-      max-width: 400px;
-      text-align: center;
-      transform: translateY(20px);
-      transition: transform 0.3s ease;
-      box-shadow: 0 0 30px rgba(0,0,0,0.8), inset 0 0 20px rgba(184,134,11,0.1);
-    }
-
-    .modal-overlay.active .modal-content {
-      transform: translateY(0);
-    }
-
-    .modal-title {
-      color: var(--goldl);
-      font-size: 1.4rem;
-      margin-bottom: 1rem;
-    }
-
-    .modal-desc {
-      color: #ccc;
-      font-size: 0.95rem;
-      margin-bottom: 1.5rem;
-    }
-
-    .name-input {
-      min-height: 48px;
-      width: 100%;
-      padding: 0.8rem 1rem;
-      background: rgba(0,0,0,0.5);
-      border: 1px solid rgba(184,134,11,0.4);
-      border-radius: 6px;
-      color: var(--parch);
-      font-family: inherit;
-      font-size: 1rem;
-      margin-bottom: 1.5rem;
-      outline: none;
-      text-align: center;
-    }
-
-    .name-input:focus {
-      border-color: var(--goldl);
-      box-shadow: 0 0 8px rgba(184,134,11,0.3);
-    }
-
-    .btn-submit {
-      min-height: 48px;
-      background: var(--gold);
-      color: var(--bg);
-      border: none;
-      padding: 0.8rem 2rem;
-      border-radius: 25px;
-      font-family: inherit;
-      font-size: 1.1rem;
-      font-weight: bold;
-      cursor: pointer;
-      width: 100%;
-      transition: all 0.2s;
-    }
-
-    .btn-submit:hover {
-      background: var(--goldl);
-      box-shadow: 0 0 15px rgba(184,134,11,0.4);
-    }
-
     footer {
       margin-top: 4rem;
       text-align: center;
@@ -341,80 +252,13 @@
       tick();
     })();
 
-    // Lógica de Navegação e Rastreio
+    // Lógica de Navegação
     const cards = document.querySelectorAll('.episode-card');
-    const modal = document.getElementById('identifyModal');
-    const nameInput = document.getElementById('listenerName');
-    const btnContinue = document.getElementById('btnContinue');
-    
-    let targetUrl = '';
-    let targetEp = '';
-
-    // Substituir pela URL do script do Google Apps Script (quando o usuário criar)
-    const GOOGLE_APP_SCRIPT_URL = ''; 
-
-    // Verifica se já tem o nome salvo no local storage (opcional, para não pedir toda hora)
-    const savedName = localStorage.getItem('oblatos_listener_name');
 
     cards.forEach(card => {
       card.addEventListener('click', () => {
-        targetUrl = card.getAttribute('data-url');
-        targetEp = card.getAttribute('data-ep');
-        
-        if (savedName) {
-          nameInput.value = savedName;
-        }
-        
-        modal.classList.add('active');
-        nameInput.focus();
+        window.location.href = card.getAttribute('data-url');
       });
-    });
-
-    modal.addEventListener('click', (e) => {
-      if (e.target === modal) {
-        modal.classList.remove('active');
-      }
-    });
-
-    function navigateToEp() {
-      const name = nameInput.value.trim();
-      if (!name) {
-        alert("Por favor, insira seu nome.");
-        return;
-      }
-
-      // Salva o nome para as próximas vezes
-      localStorage.setItem('oblatos_listener_name', name);
-
-      btnContinue.textContent = "Aguarde...";
-      btnContinue.style.opacity = "0.7";
-
-      // Se houver uma URL configurada, envia os dados silenciosamente
-      if (GOOGLE_APP_SCRIPT_URL) {
-        const formData = new FormData();
-        // O formulário precisa ser ajustado com os names corretos depois
-        formData.append('nome', name);
-        formData.append('episodio', targetEp);
-
-        fetch(GOOGLE_APP_SCRIPT_URL, {
-          method: 'POST',
-          mode: 'no-cors', // Evita erros de CORS no client-side com Google Forms
-          body: formData
-        }).then(() => {
-          window.location.href = targetUrl;
-        }).catch(() => {
-          // Mesmo se der erro, deixa a pessoa escutar
-          window.location.href = targetUrl;
-        });
-      } else {
-        // Se ainda não tiver URL configurada, apenas navega
-        window.location.href = targetUrl;
-      }
-    }
-
-    btnContinue.addEventListener('click', navigateToEp);
-    nameInput.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') navigateToEp();
     });
 
   </script>
